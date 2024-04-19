@@ -14,10 +14,33 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String 
-  email String @unique
-  password String
-  isOwner Boolean @default(false)
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  isOwner   Boolean  @default(false)
   createdAd DateTime @default(now())
+  Pedido    Pedido[]
+}
+
+model Pedido {
+  id      String    @id @default(uuid())
+  company String
+  cycle   String
+  value   String
+  userId  String
+  user    User      @relation(fields: [userId], references: [id])
+  Product Product[]
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id        String @id @default(uuid())
+  amount    String
+  name      String
+  value     String @default("Brinde")
+  valueUnit String @default("")
+  pedidoId  String
+  pedido    Pedido @relation(fields: [pedidoId], references: [id])
+  createdAt DateTime @default(now())
 }
