@@ -27,6 +27,6 @@ export class AuthenticateUseCase {
       }
     );
 
-    return {token};
+    return token;
   }
 }

@@ -1,15 +1,15 @@
 import { uuid } from "uuidv4";
 
-export class User {
+export class Product {
   public readonly id?: string;
+  public amount: string;
   public name: string;
-  public email: string;
-  public password: string;
-  public isOwner?: boolean;
-  public avatar?: string
+  public value?: string;
+  public valueUnit?: string;
+  public pedidoId: string;
   public createdAt?: Date;
 
-  constructor(props: Omit<User, "id">, id?: string) {
+  constructor(props: Omit<Product, "id">, id?: string) {
     Object.assign(this, props);
 
     if (!id) {

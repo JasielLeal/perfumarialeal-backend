@@ -1,5 +1,5 @@
 import { User } from "@/entities/User";
-import { IUserRepository } from "../IUserRepository";
+import { IUserRepository } from "./IUserRepository";
 import { prisma } from "@/lib/prisma";
 
 export class PrismaUserRepository implements IUserRepository {
@@ -19,26 +19,35 @@ export class PrismaUserRepository implements IUserRepository {
         email: data.email,
         name: data.name,
         password: data.password,
+        avatar: data.avatar,
       },
     });
     return user;
   }
 
   async findById(id: string): Promise<User> {
-
     const userExist = await prisma.user.findUnique({
-      where:{
-        id
-      }
-    })
+      where: {
+        id,
+      },
+    });
 
-    return userExist
+    return userExist;
   }
 
   async listAll(): Promise<User[]> {
-    
-    const allUsers = await prisma.user.findMany()
-  
-    return allUsers
+    const allUsers = await prisma.user.findMany();
+
+    return allUsers;
+  }
+
+  async delete(id: string): Promise<void> {
+    const user = await prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    return;
   }
 }

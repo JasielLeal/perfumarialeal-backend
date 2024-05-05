@@ -19,28 +19,29 @@ model User {
   email     String   @unique
   password  String
   isOwner   Boolean  @default(false)
-  createdAd DateTime @default(now())
+  avatar    String
+  createdAt DateTime @default(now())
   Pedido    Pedido[]
 }
 
 model Pedido {
-  id      String    @id @default(uuid())
-  company String
-  cycle   String
-  value   String
-  userId  String
-  user    User      @relation(fields: [userId], references: [id])
-  Product Product[]
-  createdAt DateTime @default(now())
+  id        String    @id @default(uuid())
+  company   String
+  cycle     String
+  value     String
+  userId    String
+  user      User      @relation(references: [id], fields: [userId])
+  product   Product[]
+  createdAt DateTime  @default(now())
 }
 
 model Product {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   amount    String
   name      String
-  value     String @default("Brinde")
-  valueUnit String @default("")
+  value     String   @default("Brinde")
+  valueUnit String   @default("")
   pedidoId  String
-  pedido    Pedido @relation(fields: [pedidoId], references: [id])
+  pedido    Pedido   @relation(references: [id], fields: [pedidoId], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
