@@ -1,17 +1,16 @@
-# Deve ser possível:
+# Perfumaria Leal Back-end
 
-[x] realizar login
-[x] pegar dados do usuário logado
-[x] pegar todos os usuários cadastrados
-[x] criar conta admin
-[x] excluir conta admin
-[x] registrar pedido (ciclo/mês/marca)
-[x] deletar pedido
-[x] registrar produtos em um ciclo (Title, valor e quantidade) OBS: Se não for especificado valor o default será (Brinde)
-[x] deletar produtos 
+## Deve ser possível:
 
-
-# Contra-medidas 
-
-[x] Middleware de autenticação
-
+- Realizar login
+- Registrar novo membro admin
+- Apagar membro admin
+- Cadastrar pedido
+- Deletar pedido
+- Filtrar pedidos por empresa
+- Ver valor investido em cada mês e no mês que você está
+- Ver total de pedidos feito no mês
+- Ver total de pedidos de cada empresa.
+- Cadastrar produto em seu respectivo pedido
+- Deletar produto
+- Lista todos os produtos em seu respectivo pedido.
