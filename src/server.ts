@@ -5,7 +5,7 @@ import { routes } from "./routes";
 
 const app = express();
 
-const allowedOrigins = ["https://perfumarialeal-front.vercel.app", "http://localhost:5173"];
+const allowedOrigins = [process.env.FRONTEND, "http://localhost:5173"];
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
