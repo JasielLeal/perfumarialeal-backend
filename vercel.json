@@ -1,9 +1,12 @@
 {
     "version": 2,
     "routes": [
-        {
-            "src": "(.*)",
-            "dest": "src/server.ts"
+      {
+        "src": "/user/auth",
+        "methods": ["GET", "POST"],
+        "headers": {
+          "Access-Control-Allow-Origin": "https://perfumarialeal-front.vercel.app"
         }
+      }
     ]
-}
+  }
