@@ -1,5 +1,4 @@
-export interface AuthenticateDTO{
-    
+export interface AuthenticateDTO{ 
     email: string
     password: string
 }
