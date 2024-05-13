@@ -26,7 +26,7 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsup src",
+    "build": "tsup src --output public",
     "start": "node dist/server.js"
   }
 }
