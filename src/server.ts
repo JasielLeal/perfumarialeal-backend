@@ -5,9 +5,21 @@ import { routes } from "./routes";
 
 const app = express();
 
+const allowedOrigins = [process.env.FRONTEND, "http://localhost:5173"];
 
+console.log(allowedOrigins)
 
-app.use(cors());
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin!) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(routes);
 
