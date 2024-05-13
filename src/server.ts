@@ -2,13 +2,24 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import { routes } from "./routes";
-import path from "path";
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'https://perfumarialeal-front.vercel.app')));
+const allowedOrigins = [process.env.FRONTEND, "http://localhost:5173"];
 
-app.use(cors());
+console.log(allowedOrigins)
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin!) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(routes);
 
