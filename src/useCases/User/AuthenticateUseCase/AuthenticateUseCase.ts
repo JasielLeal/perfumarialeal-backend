@@ -21,12 +21,13 @@ export class AuthenticateUseCase {
     }
 
     const token = jwt.sign(
-      { id: userAlreadExist.id }, process.env.JWT_SECRET as string,
+      { id: userAlreadExist.id },
+      process.env.JWT_SECRET as string,
       {
         expiresIn: "8h",
       }
     );
 
-    return token;
+    return { token, ...userAlreadExist, password: undefined };
   }
 }

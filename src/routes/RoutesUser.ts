@@ -6,7 +6,7 @@ const userController = new UserController();
 
 export const routesUser = Router();
 
-routesUser.post("/create", authenticated, userController.create);
+routesUser.post("/create", userController.create);
 routesUser.post("/auth", userController.authenticate);
 routesUser.get("/getuser", authenticated, userController.getUser);
 routesUser.get("/getallusers", authenticated, userController.getAllUsers);

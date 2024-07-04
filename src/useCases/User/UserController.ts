@@ -46,12 +46,12 @@ export class UserController {
 
       const { email, password }: AuthenticateDTO = request.body;
 
-      const token = await authenticateUseCase.execute({
+      const user = await authenticateUseCase.execute({
         email,
         password,
       });
 
-      return response.status(201).send({ token });
+      return response.status(201).send({ user });
     } catch (err) {
       if (err instanceof ErrorCreditalsInvalid) {
         return response.status(400).send({ error: err.message });
@@ -117,7 +117,7 @@ export class UserController {
       const deleteUserUseCase = new DeleteUserUseCase(prismaUserRepository);
 
       await deleteUserUseCase.execute({ id });
-      return response.status(201).send()
+      return response.status(201).send();
     } catch (err) {
       if (err instanceof ErrorUserDoesNotExist) {
         return response.status(400).send({ error: err.message });

@@ -45,3 +45,11 @@ model Product {
   pedido    Pedido   @relation(references: [id], fields: [pedidoId], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
+
+model bankProduct {
+  id        String   @id @default(uuid())
+  name      String
+  value     String
+  code      String   @unique
+  createdAt DateTime @default(now())
+}
