@@ -8,9 +8,10 @@ import { DeletePedidoUseCase } from "./DeletePedidoUseCase/DeletePedidoUseCase";
 import { TotalOrdersForTheMonthUseCase } from "./TotalOrdesForTheMonth/TotalOrdesForTheMonthUseCase";
 import { GetTheTotalAmountInvestedInTheMonthUseCase } from "./getTheTotalAmountInvestedInTheMonth/getTheTotalAmountInvestedInTheMonthUseCase";
 import { MonthyOrdersPurchasedAnnualyUseCase } from "./monthyOrdersPurchasedAnnualyUseCase/monthyOrdersPurchasedAnnualyUseCase";
-import {CountOrdersForMonthUseCase } from "./CountOrdersForMonthUseCase/CountOrdersForMonthUseCase";
+import { CountOrdersForMonthUseCase } from "./CountOrdersForMonthUseCase/CountOrdersForMonthUseCase";
+import { UpdatePedidoUseCase } from "./UpdatePedidoUseCase/UpdatePedidoUseCase";
+import { UpdatePedidoDTO } from "./UpdatePedidoUseCase/UpdatePedidoDTO";
 export class PedidoController {
-
   async create(request: Request, response: Response) {
     const { company, cycle, userId, value } = request.body;
 
@@ -116,7 +117,8 @@ export class PedidoController {
       const getTheTotalAmountInvestedInTheMonthUseCase =
         new GetTheTotalAmountInvestedInTheMonthUseCase(prismaPedidosRepository);
 
-      const pedidosCount = await getTheTotalAmountInvestedInTheMonthUseCase.execute();
+      const pedidosCount =
+        await getTheTotalAmountInvestedInTheMonthUseCase.execute();
 
       return response.status(201).send(pedidosCount);
     } catch (err) {
@@ -124,14 +126,14 @@ export class PedidoController {
     }
   }
 
-  async monthyOrdersPurchasedAnnualy(request: Request, response: Response){
+  async monthyOrdersPurchasedAnnualy(request: Request, response: Response) {
     try {
       const prismaPedidosRepository = new PrismaPedidosRepository();
-      const monthyOrdersPurchasedAnnualyUseCase = new MonthyOrdersPurchasedAnnualyUseCase(prismaPedidosRepository)
-      
-      const allPedidos = await monthyOrdersPurchasedAnnualyUseCase.execute()
-      return response.status(201).send(allPedidos)
+      const monthyOrdersPurchasedAnnualyUseCase =
+        new MonthyOrdersPurchasedAnnualyUseCase(prismaPedidosRepository);
 
+      const allPedidos = await monthyOrdersPurchasedAnnualyUseCase.execute();
+      return response.status(201).send(allPedidos);
     } catch (err) {
       if (err instanceof ErrorPedidoDoesNotExist) {
         return response.status(400).send({ error: err.message });
@@ -140,19 +142,37 @@ export class PedidoController {
     }
   }
 
-  async countOrdersForMonth(request: Request, response: Response){
+  async countOrdersForMonth(request: Request, response: Response) {
     try {
       const prismaPedidosRepository = new PrismaPedidosRepository();
-      const countOrdersForTheMonth = new CountOrdersForMonthUseCase(prismaPedidosRepository)
-      
-      const count = await countOrdersForTheMonth.execute()
-      return response.status(201).send(count)
+      const countOrdersForTheMonth = new CountOrdersForMonthUseCase(
+        prismaPedidosRepository
+      );
 
+      const count = await countOrdersForTheMonth.execute();
+      return response.status(201).send(count);
     } catch (err) {
       if (err instanceof ErrorPedidoDoesNotExist) {
         return response.status(400).send({ error: err.message });
       }
       return response.status(500).send({ error: err.message });
+    }
+  }
+
+  async update(request: Request, response: Response) {
+    try {
+      const { company, cycle, pedidoId, value }: UpdatePedidoDTO = request.body;
+
+      const pedidoRepository = new PrismaPedidosRepository();
+      const updatePedidoUseCase = new UpdatePedidoUseCase(pedidoRepository);
+
+      const pedido = await updatePedidoUseCase.execute({ pedidoId, company, cycle, value });
+      return response.status(200).send(pedido)
+    } catch (err) {
+      if (err instanceof ErrorPedidoDoesNotExist) {
+        return response.status(400).send({ error: err.message });
+      }
+      return response.status(400).send({ error: err.message });
     }
   }
 }

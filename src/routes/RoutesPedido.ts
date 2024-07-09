@@ -36,3 +36,6 @@ routesPedidos.get(
 
 routesPedidos.get('/getpedidos/allcount', pedidosController.countOrdersForMonth)
 
+routesPedidos.put('/updatepedido', pedidosController.update)
+
+

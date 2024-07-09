@@ -1,0 +1,52 @@
+import { PrismaSaleRepository } from "@/repositories/Sale/PrismaSaleRepository";
+import { Request, Response } from "express";
+import { CreateSaleUseCase } from "./Create/CreateSaleUseCase";
+import { MonthlyValueUseCase } from "./MonthlyValue/MonthlyValueUseCase";
+import { MonthlyExtractUseCase } from "./monthlyExtract/MonthlyExtractUseCase";
+
+export class SaleController {
+  async CreateSale(request: Request, response: Response) {
+    try {
+      const { customerName, products } = request.body;
+
+      const prismaSaleRepository = new PrismaSaleRepository();
+      const createSaleUseCase = new CreateSaleUseCase(prismaSaleRepository);
+
+      const sale = await createSaleUseCase.execute(customerName, products);
+
+      return response.status(200).send(sale);
+    } catch (err) {
+      return response.status(400).send({ error: err.message });
+    }
+  }
+
+  async MonthlyValue(request: Request, response: Response) {
+    try {
+      const { month } = request.params;
+
+      const prismaSaleRepository = new PrismaSaleRepository();
+      const monthlyValueUseCase = new MonthlyValueUseCase(prismaSaleRepository);
+
+      const monthly = await monthlyValueUseCase.execute({ month });
+
+      return response.status(200).send(monthly);
+    } catch (err) {
+      return response.status(400).send({ error: err.message });
+    }
+  }
+
+  async MonthlyExtract(request: Request, response: Response) {
+    try {
+      const { month } = request.params;
+
+      const prismaSaleRepository = new PrismaSaleRepository();
+      const monthlyExtractUseCase = new MonthlyExtractUseCase(prismaSaleRepository);
+
+      const monthly = await monthlyExtractUseCase.execute({ month });
+
+      return response.status(200).send(monthly);
+    } catch (err) {
+      return response.status(400).send({ error: err.message });
+    }
+  }
+}

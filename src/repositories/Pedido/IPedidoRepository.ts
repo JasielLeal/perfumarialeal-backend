@@ -5,8 +5,9 @@ export interface IPedidoRepository {
   findById(id: string): Promise<Pedidos>;
   getAll(take: number, skip: number, company: string);
   delete(id: string): Promise<void>;
-  getTotalOrdersForTheMonth()
-  getTheTotalAmountInvestedInTheMonth()
-  monthyOrdersPurchasedAnnualy()
-  countOrdersForMonth()
+  getTotalOrdersForTheMonth();
+  getTheTotalAmountInvestedInTheMonth();
+  monthyOrdersPurchasedAnnualy();
+  countOrdersForMonth();
+  update(pedidoId: string, company, cycle, value): Promise<Pedidos | null>;
 }

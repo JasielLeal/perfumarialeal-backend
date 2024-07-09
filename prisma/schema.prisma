@@ -47,9 +47,27 @@ model Product {
 }
 
 model bankProduct {
-  id        String   @id @default(uuid())
-  name      String
-  value     String
-  code      String   @unique
-  createdAt DateTime @default(now())
+  id          String        @id @default(uuid())
+  name        String
+  value       String
+  code        String        @unique
+  createdAt   DateTime      @default(now())
+  SaleProduct SaleProduct[]
+}
+
+model Sale {
+  id           String        @id @default(uuid())
+  customerName String
+  saleProduct  SaleProduct[]
+  value        String
+  createdAt    DateTime      @default(now())
+}
+
+model SaleProduct {
+  id            String      @id @default(uuid())
+  saleId        String
+  amount        String
+  BankProductId String
+  BankProduct   bankProduct @relation(fields: [BankProductId], references: [id])
+  sale          Sale        @relation(fields: [saleId], references: [id])
 }

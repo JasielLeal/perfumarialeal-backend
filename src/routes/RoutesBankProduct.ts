@@ -8,7 +8,8 @@ export const routesBankProduct = Router();
 
 routesBankProduct.post(
   "/create",
- 
+
   bankProductController.createBankProduct
 );
 routesBankProduct.get("/getall", bankProductController.GetAll);
+routesBankProduct.post("/find", bankProductController.findByCode);

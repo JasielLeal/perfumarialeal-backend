@@ -152,7 +152,7 @@ export class PrismaPedidosRepository implements IPedidoRepository {
 
     return totalAmount.toString();
   }
-  
+
   async monthyOrdersPurchasedAnnualy() {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -230,6 +230,21 @@ export class PrismaPedidosRepository implements IPedidoRepository {
       },
     });
 
-    return totalPedidos.toString()
+    return totalPedidos.toString();
+  }
+
+  async update(pedidoId: string, company, cycle, value): Promise<Pedidos> {
+    const pedido = await prisma.pedido.update({
+      where: {
+        id: pedidoId,
+      },
+      data: {
+        company: company !== null ? company : undefined,
+        value: value !== null ? value : undefined,
+        cycle: cycle !== null ? cycle : undefined,
+      },
+    });
+
+    return pedido;
   }
 }
