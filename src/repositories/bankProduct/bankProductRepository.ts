@@ -8,4 +8,5 @@ export interface BankProductRepository {
     take: number,
     skip: number
   ): Promise<BankProduct[] | undefined | null>;
+  delete(code: string): Promise<BankProduct | undefined>;
 }

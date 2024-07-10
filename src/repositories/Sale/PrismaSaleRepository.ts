@@ -90,7 +90,12 @@ export class PrismaSaleRepository implements SaleRepository {
     return totalAmount.toString();
   }
 
-  async monthlyExtract(month: string) {
+  async monthlyExtract(
+    month: string,
+    search: string,
+    take: number,
+    skip: number
+  ) {
     const year = new Date().getFullYear();
 
     const currentDate = new Date(`${year}-${month}-01T03:00:00.000Z`);
@@ -108,27 +113,34 @@ export class PrismaSaleRepository implements SaleRepository {
 
     const monthly = await prisma.sale.findMany({
       where: {
+        customerName: {
+          contains: search,
+          mode: "insensitive",
+        },
         AND: [
           { createdAt: { gte: firstDayOfMonth } },
           { createdAt: { lte: lastDayOfMonth } },
         ],
       },
       select: {
+        id: true,
         value: true,
         customerName: true,
         saleProduct: {
-          select:{
+          select: {
             amount: true,
-            BankProduct:{
-              select:{
+            BankProduct: {
+              select: {
                 name: true,
                 value: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
-        createdAt: true
+        createdAt: true,
       },
+      take: Number(take) || 10,
+      skip: Number(skip) || 0,
     });
 
     let totalAmount: number = 0; // Inicializando como número
@@ -140,6 +152,30 @@ export class PrismaSaleRepository implements SaleRepository {
       }
     });
 
-    return monthly
+    return monthly;
+  }
+
+  async delete(saleId: string): Promise<void> {
+    await prisma.sale.delete({
+      where: {
+        id: saleId,
+      },
+    });
+  }
+
+  async findById(saleId: string) {
+    await prisma.saleProduct.deleteMany({
+      where: {
+        saleId: saleId,
+      },
+    });
+
+    const sale = await prisma.sale.findUnique({
+      where: {
+        id: saleId,
+      },
+    });
+
+    return sale || undefined;
   }
 }

@@ -13,3 +13,7 @@ routesBankProduct.post(
 );
 routesBankProduct.get("/getall", bankProductController.GetAll);
 routesBankProduct.post("/find", bankProductController.findByCode);
+routesBankProduct.delete(
+  "/delete/:code",
+  bankProductController.deleteBankProduct
+);

@@ -46,4 +46,14 @@ export class PrismaBankProductRepository implements BankProductRepository {
 
     return bankProducts;
   }
+
+  async delete(code: string): Promise<BankProduct | undefined> {
+    const bankProduct = await prisma.bankProduct.delete({
+      where: {
+        code: code,
+      },
+    });
+
+    return bankProduct;
+  }
 }

@@ -6,6 +6,8 @@ import { PrismaBankProductRepository } from "@/repositories/bankProduct/PrismaBa
 import { GetAllBankProductsUseCase } from "./GetAll/GetAllBankProductsUseCase";
 import { FindByCodeUseCase } from "./FindByCode/FindByCodeUseCase";
 import { FindyByCodeDTO } from "./FindByCode/FindByCodeDTO";
+import { DeleteBankProductDTO } from "./Delete/DeleteBankProductDTO";
+import { DeleteBankProductUseCase } from "./Delete/DeleteBankProductUseCase";
 
 export class BankProductController {
   async createBankProduct(request: Request, response: Response) {
@@ -75,6 +77,27 @@ export class BankProductController {
       }
 
       return response.status(500).send({ error: err.message });
+    }
+  }
+
+  async deleteBankProduct(request: Request, response: Response) {
+    try {
+      const { code } = request.params;
+
+      const prismaBankProductRepository = new PrismaBankProductRepository();
+      const deleteBankProductUseCase = new DeleteBankProductUseCase(
+        prismaBankProductRepository
+      );
+
+      const bankProduct = await deleteBankProductUseCase.execute({ code });
+
+      return response.status(200).send(bankProduct);
+    } catch (err) {
+      if (err instanceof ErrorPedidoDoesNotExist) {
+        return response.status(400).send({ error: err.message });
+      }
+
+      return response.status(400).send({ error: err.message });
     }
   }
 }

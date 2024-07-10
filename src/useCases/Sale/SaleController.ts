@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { CreateSaleUseCase } from "./Create/CreateSaleUseCase";
 import { MonthlyValueUseCase } from "./MonthlyValue/MonthlyValueUseCase";
 import { MonthlyExtractUseCase } from "./monthlyExtract/MonthlyExtractUseCase";
+import { DeleteSaleUseCase } from "./Delete/DeleteSaleUseCase";
 
 export class SaleController {
   async CreateSale(request: Request, response: Response) {
@@ -38,13 +39,35 @@ export class SaleController {
   async MonthlyExtract(request: Request, response: Response) {
     try {
       const { month } = request.params;
-
+      const { take, skip, search } = request.query;
       const prismaSaleRepository = new PrismaSaleRepository();
-      const monthlyExtractUseCase = new MonthlyExtractUseCase(prismaSaleRepository);
+      const monthlyExtractUseCase = new MonthlyExtractUseCase(
+        prismaSaleRepository
+      );
 
-      const monthly = await monthlyExtractUseCase.execute({ month });
+      const monthly = await monthlyExtractUseCase.execute({
+        month,
+        search,
+        take,
+        skip,
+      });
 
       return response.status(200).send(monthly);
+    } catch (err) {
+      return response.status(400).send({ error: err.message });
+    }
+  }
+
+  async DeleteSale(request: Request, response: Response) {
+    try {
+      const { saleId } = request.params;
+
+      const prismaSaleRepository = new PrismaSaleRepository();
+      const deleteSaleUseCase = new DeleteSaleUseCase(prismaSaleRepository);
+
+      const sale = await deleteSaleUseCase.execute({ saleId });
+
+      return response.status(200).send(sale);
     } catch (err) {
       return response.status(400).send({ error: err.message });
     }
