@@ -7,9 +7,7 @@ const bankProductController = new BankProductController();
 export const routesBankProduct = Router();
 
 routesBankProduct.post(
-  "/create",
-
-  bankProductController.createBankProduct
+  "/create", bankProductController.createBankProduct
 );
 routesBankProduct.get("/getall", bankProductController.GetAll);
 routesBankProduct.post("/find", bankProductController.findByCode);

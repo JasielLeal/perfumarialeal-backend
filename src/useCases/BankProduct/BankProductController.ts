@@ -12,7 +12,7 @@ import { DeleteBankProductUseCase } from "./Delete/DeleteBankProductUseCase";
 export class BankProductController {
   async createBankProduct(request: Request, response: Response) {
     try {
-      const { code, name, value }: CreateBankProductDTO = request.body;
+      const { code, name, value } = request.body;
 
       const prismaBankProductRepository = new PrismaBankProductRepository();
       const createBankProductUseCase = new CreateBankProductUseCase(
