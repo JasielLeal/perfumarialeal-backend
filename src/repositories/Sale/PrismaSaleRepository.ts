@@ -131,6 +131,7 @@ export class PrismaSaleRepository implements SaleRepository {
         id: true,
         value: true,
         customerName: true,
+        transictionType: true,
         saleProduct: {
           select: {
             amount: true,
@@ -194,6 +195,7 @@ export class PrismaSaleRepository implements SaleRepository {
         id: true,
         value: true,
         customerName: true,
+        transictionType: true,
         saleProduct: {
           select: {
             amount: true,
