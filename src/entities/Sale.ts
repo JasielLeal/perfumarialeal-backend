@@ -7,6 +7,7 @@ export class Sale {
   createdAt: Date;
   saleProduct: SaleProduct[];
   value: string;
+  transictionType: string;
 
   constructor(props: Omit<Sale, "id">, id?: string) {
     Object.assign(this, props);

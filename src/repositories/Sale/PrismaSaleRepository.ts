@@ -9,7 +9,11 @@ export interface ProductInput {
 }
 
 export class PrismaSaleRepository implements SaleRepository {
-  async create(customerName: string, products: ProductInput[]) {
+  async create(
+    customerName: string,
+    products: ProductInput[],
+    transictionType: string
+  ) {
     const productCodes = products.map((product) => product.code);
     const bankProducts = await prisma.bankProduct.findMany({
       where: {
@@ -28,6 +32,7 @@ export class PrismaSaleRepository implements SaleRepository {
     const sale = await prisma.sale.create({
       data: {
         customerName,
+        transictionType,
         value: valueAll.toString(),
         saleProduct: {
           create: products.map((product) => ({
@@ -177,5 +182,33 @@ export class PrismaSaleRepository implements SaleRepository {
     });
 
     return sale || undefined;
+  }
+
+  async recent() {
+    const sale = await prisma.sale.findMany({
+      take: 2,
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        value: true,
+        customerName: true,
+        saleProduct: {
+          select: {
+            amount: true,
+            BankProduct: {
+              select: {
+                name: true,
+                value: true,
+              },
+            },
+          },
+        },
+        createdAt: true,
+      },
+    });
+
+    return sale;
   }
 }

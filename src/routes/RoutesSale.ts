@@ -9,3 +9,4 @@ routesSale.post("/create", saleController.CreateSale);
 routesSale.get("/monthlyvalue/:month", saleController.MonthlyValue);
 routesSale.get("/monthlyextract/:month", saleController.MonthlyExtract);
 routesSale.delete("/delete/:saleId", saleController.DeleteSale);
+routesSale.get("/recent", saleController.RecentSale);

@@ -56,11 +56,12 @@ model bankProduct {
 }
 
 model Sale {
-  id           String        @id @default(uuid())
-  customerName String
-  saleProduct  SaleProduct[]
-  value        String
-  createdAt    DateTime      @default(now())
+  id              String        @id @default(uuid())
+  customerName    String
+  saleProduct     SaleProduct[]
+  value           String
+  transictionType String
+  createdAt       DateTime      @default(now())
 }
 
 model SaleProduct {
