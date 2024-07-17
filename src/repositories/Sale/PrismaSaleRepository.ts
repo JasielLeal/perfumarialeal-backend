@@ -105,6 +105,8 @@ export class PrismaSaleRepository implements SaleRepository {
 
     const currentDate = new Date(`${year}-${month}-01T03:00:00.000Z`);
 
+    console.log(take)
+
     const firstDayOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -162,6 +164,12 @@ export class PrismaSaleRepository implements SaleRepository {
   }
 
   async delete(saleId: string): Promise<void> {
+    await prisma.saleProduct.deleteMany({
+      where: {
+        saleId: saleId,
+      },
+    });
+
     await prisma.sale.delete({
       where: {
         id: saleId,
@@ -187,7 +195,7 @@ export class PrismaSaleRepository implements SaleRepository {
 
   async recent() {
     const sale = await prisma.sale.findMany({
-      take: 2,
+      take: 3,
       orderBy: {
         createdAt: "desc",
       },
@@ -212,5 +220,31 @@ export class PrismaSaleRepository implements SaleRepository {
     });
 
     return sale;
+  }
+
+  async extractOfTheDay() {
+    const date = new Date();
+
+    // Set start of the day (00:00:00)
+    const startOfDay = new Date(date.setHours(0, 0, 0, 0));
+
+    // Set end of the day (23:59:59)
+    const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+
+    const sales = await prisma.sale.findMany({
+      where: {
+        createdAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      },
+    });
+
+    const totalSalesValue = sales.reduce(
+      (total, sale) => Number(total) + Number(sale.value),
+      0
+    );
+
+    return totalSalesValue.toString();
   }
 }

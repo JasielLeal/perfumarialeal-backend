@@ -5,6 +5,7 @@ import { MonthlyValueUseCase } from "./MonthlyValue/MonthlyValueUseCase";
 import { MonthlyExtractUseCase } from "./monthlyExtract/MonthlyExtractUseCase";
 import { DeleteSaleUseCase } from "./Delete/DeleteSaleUseCase";
 import { RecentSaleUseCase } from "./Recent/RecenteSaleUseCase";
+import { ExtractOfTheDayUseCase } from "./ExtractOfTheDay/ExtractOfTheDayUseCase";
 
 export class SaleController {
   async CreateSale(request: Request, response: Response) {
@@ -45,6 +46,9 @@ export class SaleController {
     try {
       const { month } = request.params;
       const { take, skip, search } = request.query;
+
+      console.log(skip)
+
       const prismaSaleRepository = new PrismaSaleRepository();
       const monthlyExtractUseCase = new MonthlyExtractUseCase(
         prismaSaleRepository
@@ -84,6 +88,21 @@ export class SaleController {
       const recentSaleUseCase = new RecentSaleUseCase(prismaSaleRepository);
 
       const sale = await recentSaleUseCase.execute();
+
+      return response.status(200).send(sale);
+    } catch (err) {
+      return response.status(400).send({ error: err.message });
+    }
+  }
+
+  async ExtractOfTheDay(request: Request, response: Response) {
+    try {
+      const prismaSaleRepository = new PrismaSaleRepository();
+      const extractOfTheDayUseCase = new ExtractOfTheDayUseCase(
+        prismaSaleRepository
+      );
+
+      const sale = await extractOfTheDayUseCase.execute();
 
       return response.status(200).send(sale);
     } catch (err) {

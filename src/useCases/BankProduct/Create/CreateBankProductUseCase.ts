@@ -5,8 +5,7 @@ export class CreateBankProductUseCase {
   constructor(private bankProductRepository: BankProductRepository) {}
 
   async execute({ code, name, value }: CreateBankProductDTO) {
-
-    if(code == null && code == undefined){
+    if (code == null && code == undefined) {
       throw new Error("Informe o codigo");
     }
 
@@ -16,10 +15,16 @@ export class CreateBankProductUseCase {
       throw new Error("Produto já cadastrado.");
     }
 
+    const formatValue = (value: string) => {
+      return parseInt(value.replace(",", ""), 10);
+    };
+
+    const newValue = formatValue(value);
+
     const bankProduct = await this.bankProductRepository.create({
       code,
       name,
-      value,
+      value: newValue.toString(),
     });
 
     return bankProduct;

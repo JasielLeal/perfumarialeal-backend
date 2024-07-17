@@ -10,5 +10,6 @@ export interface SaleRepository {
   monthlyExtract(month: string, search: string, take: number, skip: number);
   delete(saleId: string): Promise<void>;
   findById(saleId: string);
-  recent()
+  recent();
+  extractOfTheDay();
 }
