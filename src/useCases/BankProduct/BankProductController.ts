@@ -1,13 +1,15 @@
 import { ErrorPedidoDoesNotExist } from "@/erros/ErrorPedidoDoesNotExist";
 import { Request, Response } from "express";
-import { CreateBankProductDTO } from "./Create/CreateBankProductDTO";
 import { CreateBankProductUseCase } from "./Create/CreateBankProductUseCase";
 import { PrismaBankProductRepository } from "@/repositories/bankProduct/PrismaBankProductRepository";
 import { GetAllBankProductsUseCase } from "./GetAll/GetAllBankProductsUseCase";
 import { FindByCodeUseCase } from "./FindByCode/FindByCodeUseCase";
 import { FindyByCodeDTO } from "./FindByCode/FindByCodeDTO";
-import { DeleteBankProductDTO } from "./Delete/DeleteBankProductDTO";
 import { DeleteBankProductUseCase } from "./Delete/DeleteBankProductUseCase";
+import { ErrorBankProductDoesNotExist } from "@/erros/BankProducts/ErrorBankProductDoesNotExist";
+import { ErrorReportTheCoding } from "@/erros/BankProducts/ErrorReportTheCoding";
+import { EditProductUseCase } from "./EditProduct/EditProductUseCase";
+import { SoftDeletUseCase } from "./SoftDelet/SoftDeletUseCase";
 
 export class BankProductController {
   async createBankProduct(request: Request, response: Response) {
@@ -27,8 +29,8 @@ export class BankProductController {
 
       return response.status(200).send(bankProduct);
     } catch (err) {
-      if (err instanceof ErrorPedidoDoesNotExist) {
-        return response.status(400).send({ error: err.message });
+      if (err instanceof ErrorReportTheCoding) {
+        return response.status(404).send({ error: err.message });
       }
 
       return response.status(500).send({ error: err.message });
@@ -72,10 +74,9 @@ export class BankProductController {
 
       return response.status(200).send(bankProduct);
     } catch (err) {
-      if (err instanceof ErrorPedidoDoesNotExist) {
-        return response.status(400).send({ error: err.message });
+      if (err instanceof ErrorBankProductDoesNotExist) {
+        return response.status(404).send({ error: err.message });
       }
-
       return response.status(500).send({ error: err.message });
     }
   }
@@ -93,11 +94,56 @@ export class BankProductController {
 
       return response.status(200).send(bankProduct);
     } catch (err) {
-      if (err instanceof ErrorPedidoDoesNotExist) {
+      if (err instanceof ErrorBankProductDoesNotExist) {
         return response.status(400).send({ error: err.message });
       }
 
       return response.status(400).send({ error: err.message });
+    }
+  }
+
+  async EditProduct(request: Request, response: Response) {
+    try {
+      const { id, code, name, value } = request.body;
+
+      const prismaBankProductRepository = new PrismaBankProductRepository();
+      const editProductUseCase = new EditProductUseCase(
+        prismaBankProductRepository
+      );
+
+      const bankProduct = await editProductUseCase.execute(
+        id,
+        code,
+        name,
+        value
+      );
+
+      return response.status(200).send(bankProduct);
+    } catch (err) {
+      if (err instanceof ErrorBankProductDoesNotExist) {
+        return response.status(404).send({ error: err.message });
+      }
+      return response.status(500).send({ error: err.message });
+    }
+  }
+
+  async SoftDelet(request: Request, response: Response) {
+    try {
+      const { code } = request.params;
+
+      const prismaBankProductRepository = new PrismaBankProductRepository();
+      const softDeletUseCase = new SoftDeletUseCase(
+        prismaBankProductRepository
+      );
+
+      const bankProduct = await softDeletUseCase.execute(code);
+
+      return response.status(200).send(bankProduct);
+    } catch (err) {
+      if (err instanceof ErrorBankProductDoesNotExist) {
+        return response.status(404).send({ error: err.message });
+      }
+      return response.status(500).send({ error: err.message });
     }
   }
 }

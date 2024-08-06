@@ -6,6 +6,7 @@ export class BankProduct {
   public value: string;
   public code: string;
   public createdAt?: Date;
+  public deletedAt?: boolean;
 
   constructor(props: Omit<BankProduct, "id">, id?: string) {
     Object.assign(this, props);
@@ -15,4 +16,3 @@ export class BankProduct {
     }
   }
 }
- 

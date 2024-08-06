@@ -7,8 +7,6 @@ const app = express();
 
 const allowedOrigins = [process.env.FRONTEND, "http://localhost:5173"];
 
-console.log(allowedOrigins)
-
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin!) !== -1 || !origin) {

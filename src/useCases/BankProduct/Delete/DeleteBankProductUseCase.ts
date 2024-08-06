@@ -1,5 +1,6 @@
 import { BankProductRepository } from "@/repositories/bankProduct/bankProductRepository";
 import { DeleteBankProductDTO } from "./DeleteBankProductDTO";
+import { ErrorBankProductDoesNotExist } from "@/erros/BankProducts/ErrorBankProductDoesNotExist";
 
 export class DeleteBankProductUseCase {
   constructor(private bankProductRepository: BankProductRepository) {}
@@ -9,7 +10,7 @@ export class DeleteBankProductUseCase {
     const bankProduct = await this.bankProductRepository.findByCode(code);
 
     if (!bankProduct) {
-      throw new Error("Produto não existe");
+      throw new ErrorBankProductDoesNotExist()
     }
 
     await this.bankProductRepository.delete(code);

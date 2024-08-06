@@ -6,12 +6,13 @@ const bankProductController = new BankProductController();
 
 export const routesBankProduct = Router();
 
-routesBankProduct.post(
-  "/create", bankProductController.createBankProduct
-);
+routesBankProduct.post("/create", bankProductController.createBankProduct);
 routesBankProduct.get("/getall", bankProductController.GetAll);
 routesBankProduct.post("/find", bankProductController.findByCode);
 routesBankProduct.delete(
   "/delete/:code",
   bankProductController.deleteBankProduct
 );
+
+routesBankProduct.put("/update", bankProductController.EditProduct);
+routesBankProduct.put("/softdelet/:code", bankProductController.SoftDelet);

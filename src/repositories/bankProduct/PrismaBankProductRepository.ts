@@ -19,6 +19,7 @@ export class PrismaBankProductRepository implements BankProductRepository {
     const bankProduct = await prisma.bankProduct.findUnique({
       where: {
         code,
+        deletedAt: false,
       },
     });
 
@@ -36,7 +37,9 @@ export class PrismaBankProductRepository implements BankProductRepository {
           contains: search,
           mode: "insensitive",
         },
+        deletedAt: false,
       },
+
       take: Number(take) || 10,
       skip: Number(skip) || 0,
       orderBy: {
@@ -55,5 +58,61 @@ export class PrismaBankProductRepository implements BankProductRepository {
     });
 
     return bankProduct;
+  }
+
+  async editProduct(
+    id: string,
+    code: string,
+    name?: string,
+    value?: string
+  ): Promise<void> {
+    // Objeto de atualização inicial vazio
+    const updateData: any = {};
+
+    // Adiciona ao objeto de atualização apenas os campos definidos
+    if (name !== undefined) {
+      updateData.name = name;
+    }
+
+    if (value !== undefined) {
+      updateData.value = value;
+    }
+
+    if (code !== undefined) {
+      updateData.code = code;
+    }
+
+    // Realiza a atualização se houver dados para atualizar
+    if (Object.keys(updateData).length > 0) {
+      await prisma.bankProduct.update({
+        where: { id },
+        data: updateData,
+      });
+    }
+
+    return;
+  }
+
+  async findById(id: string): Promise<BankProduct | undefined> {
+    const bankProduct = await prisma.bankProduct.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return bankProduct;
+  }
+
+  async SoftDelet(code: string): Promise<void> {
+    await prisma.bankProduct.update({
+      where: {
+        code,
+      },
+      data: {
+        deletedAt: true,
+      },
+    });
+
+    return;
   }
 }

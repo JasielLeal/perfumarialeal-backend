@@ -52,6 +52,7 @@ model bankProduct {
   value       String
   code        String        @unique
   createdAt   DateTime      @default(now())
+  deletedAt   Boolean       @default(false)
   SaleProduct SaleProduct[]
 }
 
