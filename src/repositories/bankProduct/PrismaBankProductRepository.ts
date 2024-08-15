@@ -37,9 +37,7 @@ export class PrismaBankProductRepository implements BankProductRepository {
           contains: search,
           mode: "insensitive",
         },
-        deletedAt: false,
       },
-
       take: Number(take) || 10,
       skip: Number(skip) || 0,
       orderBy: {
