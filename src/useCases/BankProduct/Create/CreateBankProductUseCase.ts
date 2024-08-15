@@ -1,6 +1,7 @@
 import { BankProductRepository } from "@/repositories/bankProduct/bankProductRepository";
 import { CreateBankProductDTO } from "./CreateBankProductDTO";
 import { ErrorReportTheCoding } from "@/erros/BankProducts/ErrorReportTheCoding";
+import { ErrorBankProductDoesExist } from "@/erros/BankProducts/ErrorBankProductDoesExist";
 
 export class CreateBankProductUseCase {
   constructor(private bankProductRepository: BankProductRepository) {}
@@ -13,7 +14,7 @@ export class CreateBankProductUseCase {
     const bankProductExist = await this.bankProductRepository.findByCode(code);
 
     if (bankProductExist) {
-      throw new Error("Produto já cadastrado.");
+      throw new ErrorBankProductDoesExist()
     }
 
     const formatValue = (value: string) => {

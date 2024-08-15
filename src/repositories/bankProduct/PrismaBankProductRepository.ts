@@ -19,7 +19,6 @@ export class PrismaBankProductRepository implements BankProductRepository {
     const bankProduct = await prisma.bankProduct.findUnique({
       where: {
         code,
-        deletedAt: false,
       },
     });
 
@@ -99,18 +98,5 @@ export class PrismaBankProductRepository implements BankProductRepository {
     });
 
     return bankProduct;
-  }
-
-  async SoftDelet(code: string): Promise<void> {
-    await prisma.bankProduct.update({
-      where: {
-        code,
-      },
-      data: {
-        deletedAt: true,
-      },
-    });
-
-    return;
   }
 }

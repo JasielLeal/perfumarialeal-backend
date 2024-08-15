@@ -16,5 +16,5 @@ export interface BankProductRepository {
     value: string
   ): Promise<void>;
   findById(id: string): Promise<BankProduct | undefined>;
-  SoftDelet(code: string): Promise<void>;
+ 
 }

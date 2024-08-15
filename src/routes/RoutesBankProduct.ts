@@ -15,4 +15,4 @@ routesBankProduct.delete(
 );
 
 routesBankProduct.put("/update", bankProductController.EditProduct);
-routesBankProduct.put("/softdelet/:code", bankProductController.SoftDelet);
+

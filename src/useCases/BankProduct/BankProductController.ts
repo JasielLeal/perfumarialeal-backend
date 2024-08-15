@@ -9,7 +9,7 @@ import { DeleteBankProductUseCase } from "./Delete/DeleteBankProductUseCase";
 import { ErrorBankProductDoesNotExist } from "@/erros/BankProducts/ErrorBankProductDoesNotExist";
 import { ErrorReportTheCoding } from "@/erros/BankProducts/ErrorReportTheCoding";
 import { EditProductUseCase } from "./EditProduct/EditProductUseCase";
-import { SoftDeletUseCase } from "./SoftDelet/SoftDeletUseCase";
+import { ErrorBankProductDoesExist } from "@/erros/BankProducts/ErrorBankProductDoesExist";
 
 export class BankProductController {
   async createBankProduct(request: Request, response: Response) {
@@ -32,6 +32,11 @@ export class BankProductController {
       if (err instanceof ErrorReportTheCoding) {
         return response.status(404).send({ error: err.message });
       }
+
+      if (err instanceof ErrorBankProductDoesExist) {
+        return response.status(404).send({ error: err.message });
+      }
+
 
       return response.status(500).send({ error: err.message });
     }
@@ -127,23 +132,5 @@ export class BankProductController {
     }
   }
 
-  async SoftDelet(request: Request, response: Response) {
-    try {
-      const { code } = request.params;
-
-      const prismaBankProductRepository = new PrismaBankProductRepository();
-      const softDeletUseCase = new SoftDeletUseCase(
-        prismaBankProductRepository
-      );
-
-      const bankProduct = await softDeletUseCase.execute(code);
-
-      return response.status(200).send(bankProduct);
-    } catch (err) {
-      if (err instanceof ErrorBankProductDoesNotExist) {
-        return response.status(404).send({ error: err.message });
-      }
-      return response.status(500).send({ error: err.message });
-    }
-  }
+  
 }
