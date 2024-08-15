@@ -105,8 +105,6 @@ export class PrismaSaleRepository implements SaleRepository {
 
     const currentDate = new Date(`${year}-${month}-01T03:00:00.000Z`);
 
-    console.log(take)
-
     const firstDayOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
