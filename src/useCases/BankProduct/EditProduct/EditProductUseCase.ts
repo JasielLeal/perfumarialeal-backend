@@ -11,14 +11,12 @@ export class EditProductUseCase {
       throw new ErrorBankProductDoesNotExist();
     }
 
-    const numericValue = parseInt(value.replace(",", ""), 10);
+    if (value) {
+      const numericValue = parseInt(value.replace(",", ""), 10);
+      value = numericValue.toString();
+    }
 
-    await this.bankProductRepository.editProduct(
-      id,
-      code,
-      name,
-      numericValue.toString()
-    );
+    await this.bankProductRepository.editProduct(id, code, name, value);
 
     return;
   }

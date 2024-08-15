@@ -110,7 +110,7 @@ export class BankProductController {
   async EditProduct(request: Request, response: Response) {
     try {
       const { id, code, name, value } = request.body;
-
+      
       const prismaBankProductRepository = new PrismaBankProductRepository();
       const editProductUseCase = new EditProductUseCase(
         prismaBankProductRepository
