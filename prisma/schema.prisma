@@ -14,14 +14,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  isOwner   Boolean  @default(false)
-  avatar    String
-  createdAt DateTime @default(now())
-  Pedido    Pedido[]
+  id                 String   @id @default(uuid())
+  name               String
+  secondName         String
+  email              String   @unique
+  password           String
+  role               String   @default("Member")
+  resetPasswordToken String?  @unique
+  avatar             String
+  createdAt          DateTime @default(now())
+  Pedido             Pedido[]
 }
 
 model Pedido {

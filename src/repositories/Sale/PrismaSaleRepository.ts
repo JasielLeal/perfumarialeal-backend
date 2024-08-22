@@ -1,7 +1,5 @@
-import { Sale } from "@/entities/Sale";
 import { SaleRepository } from "./SaleRepository";
 import { prisma } from "@/lib/prisma";
-import { SaleProduct } from "@/entities/SaleProduct";
 
 export interface ProductInput {
   code: string;
@@ -14,6 +12,7 @@ export class PrismaSaleRepository implements SaleRepository {
     products: ProductInput[],
     transictionType: string
   ) {
+
     const productCodes = products.map((product) => product.code);
     const bankProducts = await prisma.bankProduct.findMany({
       where: {

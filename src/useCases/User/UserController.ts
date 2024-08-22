@@ -20,14 +20,22 @@ export class UserController {
 
       const createUserUseCase = new CreateUserUseCase(prismaUserRepository);
 
-      const { name, email, password, avatar }: ICreateUserRequestDTO =
-        request.body;
+      const {
+        name,
+        email,
+        password,
+        avatar,
+        secondName,
+        role,
+      }: ICreateUserRequestDTO = request.body;
 
       const user = await createUserUseCase.execute({
         name,
         email,
         password,
         avatar,
+        secondName,
+        role,
       });
 
       return response.status(201).send({ user });

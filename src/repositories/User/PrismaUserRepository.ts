@@ -20,6 +20,8 @@ export class PrismaUserRepository implements IUserRepository {
         name: data.name,
         password: data.password,
         avatar: data.avatar,
+        secondName: data.secondName,
+        role: data.role,
       },
     });
     return user;
