@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken";
 import { GetUserDTO } from "./GetUserUseCase/GetUserDTO";
 import { GetAllUserUseCase } from "./GetAllUsersUseCase/GetAllUserUseCase";
 import { DeleteUserUseCase } from "./DeleteUserUseCase/DeleteUserUseCase";
+import { ErrorPermission } from "@/erros/User/ErrorPermission";
 
 export class UserController {
   async create(request: Request, response: Response) {
@@ -128,6 +129,9 @@ export class UserController {
       return response.status(201).send();
     } catch (err) {
       if (err instanceof ErrorUserDoesNotExist) {
+        return response.status(400).send({ error: err.message });
+      }
+      if (err instanceof ErrorPermission) {
         return response.status(400).send({ error: err.message });
       }
       return response.status(500).send({ error: err.message });
