@@ -52,4 +52,37 @@ export class PrismaUserRepository implements IUserRepository {
 
     return;
   }
+
+  async ForgetPassword(id: string, resetToken: string): Promise<User | null> {
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        resetPasswordToken: resetToken,
+      },
+    });
+
+    return user;
+  }
+
+  async updatePassword(id: string, password: string): Promise<User | null> {
+    const newPassword = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        password,
+      },
+    });
+
+    return newPassword;
+  }
+
+  async findByResetToken(resetToken: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: {
+        resetPasswordToken: resetToken,
+      },
+    });
+    return user;
+  }
 }

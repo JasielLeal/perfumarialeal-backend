@@ -64,7 +64,7 @@ export class PrismaBankProductRepository implements BankProductRepository {
     value?: string
   ): Promise<void> {
 
-    console.log(name)
+
     // Objeto de atualização inicial vazio
     const updateData: any = {};
 

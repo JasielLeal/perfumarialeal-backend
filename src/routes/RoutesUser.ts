@@ -11,3 +11,6 @@ routesUser.post("/auth", userController.authenticate);
 routesUser.get("/getuser", authenticated, userController.getUser);
 routesUser.get("/getallusers", authenticated, userController.getAllUsers);
 routesUser.delete("/delete/:id", authenticated, userController.delete);
+routesUser.post("/forgetpassword", userController.forgetPassword);
+routesUser.post("/recovery", userController.VerifyPasswordToken);
+routesUser.put("/changepassword", userController.UpdatePassword);

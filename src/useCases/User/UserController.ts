@@ -13,6 +13,11 @@ import { GetUserDTO } from "./GetUserUseCase/GetUserDTO";
 import { GetAllUserUseCase } from "./GetAllUsersUseCase/GetAllUserUseCase";
 import { DeleteUserUseCase } from "./DeleteUserUseCase/DeleteUserUseCase";
 import { ErrorPermission } from "@/erros/User/ErrorPermission";
+import { ForgetPasswordUseCase } from "./ForgetPassword/ForgetPasswordUseCase";
+import { ErrorSedingToken } from "@/erros/authenticate/ErrorSedingToken";
+import { VerifyPasswordTokenUsecase } from "./VerifyPasswordToken/VerifyPasswordTokenUseCase";
+import { ErrorTokenInvalid } from "@/erros/authenticate/ErrorTokenInvalid";
+import { UpdatePasswordUseCase } from "./UpdatePasswordUseCase/UpdatePasswordUseCase";
 
 export class UserController {
   async create(request: Request, response: Response) {
@@ -135,6 +140,66 @@ export class UserController {
         return response.status(400).send({ error: err.message });
       }
       return response.status(500).send({ error: err.message });
+    }
+  }
+
+  async forgetPassword(request: Request, response: Response) {
+    try {
+      const { email } = request.body;
+
+      const prismaUserRepository = new PrismaUserRepository();
+      const forgetPasswordUseCase = new ForgetPasswordUseCase(
+        prismaUserRepository
+      );
+
+      await forgetPasswordUseCase.execute(email);
+
+      return response.status(200).send();
+    } catch (err) {
+      if (err instanceof ErrorSedingToken || ErrorUserAlreadyExist) {
+        return response.status(400).send({ error: err.message });
+      }
+      return response.status(500).send(err);
+    }
+  }
+
+  async VerifyPasswordToken(request: Request, response: Response) {
+    try {
+      const { token } = request.query;
+      const prismaUserRepository = new PrismaUserRepository();
+      const verifyPasswordTokenUseCase = new VerifyPasswordTokenUsecase(
+        prismaUserRepository
+      );
+
+      await verifyPasswordTokenUseCase.execute(token.toString());
+
+      return response.status(200).send("Senha Atualizada com Sucesso");
+    } catch (err) {
+      if (err instanceof ErrorTokenInvalid) {
+        return response.status(400).send({ error: err.message });
+      }
+      return response.status(500).send(err);
+    }
+  }
+
+  async UpdatePassword(request: Request, response: Response) {
+    try {
+      const { token } = request.query;
+      const { password } = request.body;
+
+      const prismaUserRepository = new PrismaUserRepository();
+      const updatePasswordUseCase = new UpdatePasswordUseCase(
+        prismaUserRepository
+      );
+      
+      await updatePasswordUseCase.execute(password, token.toString());
+
+      return response.status(200).send();
+    } catch (err) {
+      if (err instanceof ErrorTokenInvalid) {
+        return response.status(400).send({ error: err.message });
+      }
+      return response.status(500).send(err);
     }
   }
 }

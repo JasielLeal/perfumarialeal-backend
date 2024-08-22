@@ -6,4 +6,7 @@ export interface IUserRepository {
   listAll(): Promise<User[]>;
   save(data: User): Promise<User>;
   delete(id: string): Promise<void>;
+  ForgetPassword(id: string, resetToken: string): Promise<User | null>;
+  updatePassword(id: string, password: string): Promise<User | null>;
+  findByResetToken(resetToken: string): Promise<User | null>;
 }
