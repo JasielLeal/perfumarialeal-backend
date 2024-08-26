@@ -59,7 +59,7 @@ export class UserController {
       const authenticateUseCase = new AuthenticateUseCase(prismaUserRepository);
 
       const { email, password }: AuthenticateDTO = request.body;
-
+      console.log(email)
       const user = await authenticateUseCase.execute({
         email,
         password,

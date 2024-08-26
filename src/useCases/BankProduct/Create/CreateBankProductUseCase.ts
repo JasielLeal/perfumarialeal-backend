@@ -8,17 +8,18 @@ export class CreateBankProductUseCase {
 
   async execute({ code, name, value }: CreateBankProductDTO) {
     if (code == null && code == undefined) {
-      throw new ErrorReportTheCoding()
+      throw new ErrorReportTheCoding();
     }
 
     const bankProductExist = await this.bankProductRepository.findByCode(code);
 
     if (bankProductExist) {
-      throw new ErrorBankProductDoesExist()
+      throw new ErrorBankProductDoesExist();
     }
 
     const formatValue = (value: string) => {
-      return parseInt(value.replace(",", ""), 10);
+      // Remove todos os pontos e vírgulas
+      return parseInt(value.replace(/\./g, "").replace(",", ""), 10);
     };
 
     const newValue = formatValue(value);

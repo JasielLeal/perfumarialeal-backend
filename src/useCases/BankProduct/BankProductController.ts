@@ -15,7 +15,7 @@ export class BankProductController {
   async createBankProduct(request: Request, response: Response) {
     try {
       const { code, name, value } = request.body;
-
+      console.log(value)
       const prismaBankProductRepository = new PrismaBankProductRepository();
       const createBankProductUseCase = new CreateBankProductUseCase(
         prismaBankProductRepository
