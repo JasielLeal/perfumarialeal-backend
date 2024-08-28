@@ -1,6 +1,7 @@
 import { BankProduct } from "@/entities/BankProduct";
 import { BankProductRepository } from "./bankProductRepository";
 import { prisma } from "@/lib/prisma";
+import { BestSellingProduct } from "@/entities/BestSellingProduct";
 
 export class PrismaBankProductRepository implements BankProductRepository {
   async create(data: BankProduct): Promise<BankProduct> {
@@ -63,8 +64,6 @@ export class PrismaBankProductRepository implements BankProductRepository {
     name?: string,
     value?: string
   ): Promise<void> {
-
-
     // Objeto de atualização inicial vazio
     const updateData: any = {};
 
@@ -87,8 +86,6 @@ export class PrismaBankProductRepository implements BankProductRepository {
         where: { id },
         data: updateData,
       });
-
-      
     }
 
     return;
@@ -102,5 +99,24 @@ export class PrismaBankProductRepository implements BankProductRepository {
     });
 
     return bankProduct;
+  }
+
+  async bestSellingProducts(): Promise<BestSellingProduct[]> {
+    const bestSellingProducts = await prisma.bankProduct.findMany({
+      include: {
+        _count: {
+          select: {
+            SaleProduct: true,
+          },
+        },
+      },
+      orderBy: {
+        SaleProduct: {
+          _count: "desc",
+        },
+      },
+    });
+
+    return bestSellingProducts;
   }
 }

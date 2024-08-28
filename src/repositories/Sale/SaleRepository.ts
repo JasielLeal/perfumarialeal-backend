@@ -12,4 +12,5 @@ export interface SaleRepository {
   findById(saleId: string);
   recent();
   extractOfTheDay();
+  
 }

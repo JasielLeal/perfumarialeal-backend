@@ -12,7 +12,6 @@ export class PrismaSaleRepository implements SaleRepository {
     products: ProductInput[],
     transictionType: string
   ) {
-
     const productCodes = products.map((product) => product.code);
     const bankProducts = await prisma.bankProduct.findMany({
       where: {

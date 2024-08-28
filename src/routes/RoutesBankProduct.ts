@@ -15,4 +15,7 @@ routesBankProduct.delete(
 );
 
 routesBankProduct.put("/update", bankProductController.EditProduct);
-
+routesBankProduct.get(
+  "/bestsellingproducts",
+  bankProductController.BestSellingProducts
+);

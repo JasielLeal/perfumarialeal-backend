@@ -1,4 +1,5 @@
 import { BankProduct } from "@/entities/BankProduct";
+import { BestSellingProduct } from "@/entities/BestSellingProduct";
 
 export interface BankProductRepository {
   create(data: BankProduct): Promise<BankProduct | undefined>;
@@ -16,5 +17,5 @@ export interface BankProductRepository {
     value: string
   ): Promise<void>;
   findById(id: string): Promise<BankProduct | undefined>;
- 
+  bestSellingProducts(): Promise<BestSellingProduct[]>;
 }
