@@ -18,12 +18,12 @@ export class CreateUserUseCase {
     const user = await this.userRepository.save({
       name: data.name,
       email: data.email,
-      password: data.password,
+      password: passwordHash,
       avatar: data.avatar,
       secondName: data.secondName,
       role: data.role,
     });
 
-    return { ...user, password: undefined };
+    return { ...user, password: undefined, email: undefined, resetPasswordToken: undefined };
   }
 }

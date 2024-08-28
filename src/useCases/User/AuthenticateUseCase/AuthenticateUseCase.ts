@@ -28,6 +28,6 @@ export class AuthenticateUseCase {
       }
     );
 
-    return { token, ...userAlreadExist, password: undefined };
+    return { token, ...userAlreadExist, password: undefined, email: undefined, resetPasswordToken: undefined };
   }
 }
