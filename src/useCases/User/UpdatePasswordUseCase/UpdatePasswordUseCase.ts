@@ -14,7 +14,7 @@ export class UpdatePasswordUseCase {
     }
 
     const newPassword = await hash(password, 6);
-    const resetPasswordToken = GenereteForgetTokenPassword(5);
+    const resetPasswordToken = null;
     await this.userRepository.updatePassword(verifyToken.id, newPassword);
     await this.userRepository.ForgetPassword(
       verifyToken.id,

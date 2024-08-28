@@ -16,7 +16,6 @@ export class ForgetPasswordUseCase {
 
     const resetPasswordToken = GenereteForgetTokenPassword(5);
 
-    const resetLink = `http://localhost:5173/recovery-password?token=${resetPasswordToken}`;
     await this.userRepository.ForgetPassword(userExist.id, resetPasswordToken);
 
     const transporter = nodemailer.createTransport({
@@ -31,32 +30,29 @@ export class ForgetPasswordUseCase {
       const mailOptions = {
         to: userExist.email,
         from: process.env.EMAIL_USER,
-        subject: "Password Reset",
+        subject: "Código para Redefinição de Senha",
         html: `
           <html>
           <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5;">
             <table align="center" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
               <tr>
                 <td style="background-color: #007bff; color: #ffffff; padding: 20px; text-align: center;">
-                  <h1 style="margin: 0;">Password Reset</h1>
+                  <h1 style="margin: 0;">Redefinição de Senha</h1>
                 </td>
               </tr>
               <tr>
                 <td style="padding: 20px;">
                   <p style="font-size: 16px; line-height: 1.5; color: #333333;">
-                    Hello ${userExist.name} ${userExist.secondName},
+                    Olá ${userExist.name} ${userExist.secondName},
                   </p>
                   <p style="font-size: 16px; line-height: 1.5; color: #333333;">
-                    Você está recebendo este e-mail porque você (ou outra pessoa) solicitou uma redefinição de senha para sua conta.
+                    Você solicitou a redefinição de senha para sua conta. Use o código abaixo para prosseguir com a redefinição:
+                  </p>
+                  <p style="font-size: 24px; font-weight: bold; text-align: center; color: #007bff;">
+                    ${resetPasswordToken}
                   </p>
                   <p style="font-size: 16px; line-height: 1.5; color: #333333;">
-                    Use o link a seguir para redefinir sua senha:
-                  </p>
-                  <p style="font-size: 16px; line-height: 1.5; color: #333333;">
-                    <a href="${resetLink}" style="color: #007bff; text-decoration: none; font-weight: bold;">Reset Password</a>
-                  </p>
-                  <p style="font-size: 16px; line-height: 1.5; color: #333333;">
-                    Este link expirará em 1 hora. Se você não solicitou isso, ignore este e-mail e sua senha permanecerá inalterada
+                    Este código expirará em 1 hora. Se você não solicitou a redefinição de senha, por favor, ignore este e-mail.
                   </p>
                   <p style="font-size: 16px; line-height: 1.5; color: #333333;">
                     Atenciosamente,<br>Leal Perfumaria.
@@ -66,7 +62,7 @@ export class ForgetPasswordUseCase {
               <tr>
                 <td style="background-color: #f5f5f5; padding: 10px; text-align: center;">
                   <p style="font-size: 12px; color: #999999; margin: 0;">
-                    &copy; ${new Date().getFullYear()} Your Company Name. All rights reserved.
+                    &copy; ${new Date().getFullYear()} Leal Perfumaria. Todos os direitos reservados.
                   </p>
                 </td>
               </tr>
