@@ -6,11 +6,17 @@ const userController = new UserController();
 
 export const routesUser = Router();
 
+// Rotas públicas (não requerem autenticação)
 routesUser.post("/create", userController.create);
 routesUser.post("/auth", userController.authenticate);
-routesUser.get("/getuser", authenticated, userController.getUser);
-routesUser.get("/getallusers", authenticated, userController.getAllUsers);
-routesUser.delete("/delete/:id", authenticated, userController.delete);
 routesUser.post("/forgetpassword", userController.forgetPassword);
 routesUser.post("/recovery", userController.VerifyPasswordToken);
 routesUser.put("/changepassword", userController.UpdatePassword);
+
+// Aplica o middleware de autenticação para as rotas que precisam de proteção
+routesUser.use(authenticated);
+
+// Rotas protegidas (requerem autenticação)
+routesUser.get("/getuser", userController.getUser);
+routesUser.get("/getallusers", userController.getAllUsers);
+routesUser.delete("/delete/:id", userController.delete);

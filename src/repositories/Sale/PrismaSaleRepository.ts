@@ -145,6 +145,9 @@ export class PrismaSaleRepository implements SaleRepository {
       },
       take: Number(take) || 10,
       skip: Number(skip) || 0,
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
     let totalAmount: number = 0; // Inicializando como número
