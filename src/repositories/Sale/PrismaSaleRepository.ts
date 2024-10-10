@@ -10,7 +10,8 @@ export class PrismaSaleRepository implements SaleRepository {
   async create(
     customerName: string,
     products: ProductInput[],
-    transictionType: string
+    transictionType: string,
+    createdAt: Date
   ) {
     const productCodes = products.map((product) => product.code);
     const bankProducts = await prisma.bankProduct.findMany({
@@ -31,6 +32,7 @@ export class PrismaSaleRepository implements SaleRepository {
       data: {
         customerName,
         transictionType,
+        createdAt: createdAt || new Date(),
         value: valueAll.toString(),
         saleProduct: {
           create: products.map((product) => ({
@@ -100,21 +102,31 @@ export class PrismaSaleRepository implements SaleRepository {
     skip: number
   ) {
     const year = new Date().getFullYear();
-
-    const currentDate = new Date(`${year}-${month}-01T03:00:00.000Z`);
-
+  
+    // Construindo as datas do primeiro e último dia do mês no formato UTC
     const firstDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
+      Date.UTC(year, parseInt(month) - 1, 1, 0, 0, 0)
     );
     const lastDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0
+      Date.UTC(year, parseInt(month), 0, 23, 59, 59)
     );
-
-    const monthly = await prisma.sale.findMany({
+  
+    // Contar total de vendas para paginação
+    const totalItems = await prisma.sale.count({
+      where: {
+        customerName: {
+          contains: search,
+          mode: "insensitive",
+        },
+        AND: [
+          { createdAt: { gte: firstDayOfMonth } },
+          { createdAt: { lte: lastDayOfMonth } },
+        ],
+      },
+    });
+  
+    // Consulta ao banco de dados filtrando corretamente por datas UTC
+    const sales = await prisma.sale.findMany({
       where: {
         customerName: {
           contains: search,
@@ -130,6 +142,7 @@ export class PrismaSaleRepository implements SaleRepository {
         value: true,
         customerName: true,
         transictionType: true,
+        createdAt: true,
         saleProduct: {
           select: {
             amount: true,
@@ -141,27 +154,28 @@ export class PrismaSaleRepository implements SaleRepository {
             },
           },
         },
-        createdAt: true,
       },
       take: Number(take) || 10,
       skip: Number(skip) || 0,
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: "desc",
+      },
     });
-
-    let totalAmount: number = 0; // Inicializando como número
-    monthly.forEach((pedido) => {
-      const valueAsNumber = parseFloat(pedido.value);
-      if (!isNaN(valueAsNumber)) {
-        // Verificando se a conversão para número é válida
-        totalAmount += valueAsNumber;
-      }
-    });
-
-    return monthly;
+  
+    // Calcular o total de páginas
+    const totalPages = Math.ceil(totalItems / (Number(take) || 10));
+    const currentPage = Math.ceil((Number(skip) || 0) / (Number(take) || 10)) + 1;
+    console.log(currentPage)
+    // Retornar a resposta com informações de paginação
+    return {
+      currentPage,
+      totalPages,
+      totalItems,
+      itemsPerPage: Number(take) || 10,
+      sales,
+    };
   }
-
+  
   async delete(saleId: string): Promise<void> {
     await prisma.saleProduct.deleteMany({
       where: {
@@ -245,5 +259,39 @@ export class PrismaSaleRepository implements SaleRepository {
     );
 
     return totalSalesValue.toString();
+  }
+
+  async editSale(
+    saleId: string,
+    customerName: string,
+    transictionType: string,
+    value: string,
+    saleProducts: Array<{ id: string; amount: string; BankProductId: string }>
+  ) {
+    const updatedSale = await prisma.sale.update({
+      where: { id: saleId },
+      data: {
+        customerName,
+        transictionType,
+        value,
+        saleProduct: {
+          upsert: saleProducts.map((product) => ({
+            where: { id: product.id },
+            create: {
+              amount: product.amount,
+              BankProduct: {
+                connect: { id: product.BankProductId }, // Conecta ao produto do banco
+              },
+            },
+            update: {
+              amount: product.amount,
+              BankProduct: {
+                connect: { id: product.BankProductId },
+              },
+            },
+          })),
+        },
+      },
+    });
   }
 }

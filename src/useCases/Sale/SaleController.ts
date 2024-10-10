@@ -10,7 +10,8 @@ import { ExtractOfTheDayUseCase } from "./ExtractOfTheDay/ExtractOfTheDayUseCase
 export class SaleController {
   async CreateSale(request: Request, response: Response) {
     try {
-      const { customerName, products, transictionType } = request.body;
+      const { customerName, products, transictionType, createdAt } =
+        request.body;
 
       const prismaSaleRepository = new PrismaSaleRepository();
       const createSaleUseCase = new CreateSaleUseCase(prismaSaleRepository);
@@ -18,7 +19,8 @@ export class SaleController {
       const sale = await createSaleUseCase.execute(
         customerName,
         products,
-        transictionType
+        transictionType,
+        createdAt
       );
 
       return response.status(200).send(sale);
@@ -46,6 +48,8 @@ export class SaleController {
     try {
       const { month } = request.params;
       const { take, skip, search } = request.query;
+
+      console.log(take)
 
       const prismaSaleRepository = new PrismaSaleRepository();
       const monthlyExtractUseCase = new MonthlyExtractUseCase(

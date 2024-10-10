@@ -88,8 +88,7 @@ export class PrismaBankProductRepository implements BankProductRepository {
       });
     }
 
-    return;
-  }
+    return;}
 
   async findById(id: string): Promise<BankProduct | undefined> {
     const bankProduct = await prisma.bankProduct.findUnique({
