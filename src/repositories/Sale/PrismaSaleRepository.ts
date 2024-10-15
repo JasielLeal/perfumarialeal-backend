@@ -165,7 +165,6 @@ export class PrismaSaleRepository implements SaleRepository {
     // Calcular o total de páginas
     const totalPages = Math.ceil(totalItems / (Number(take) || 10));
     const currentPage = Math.ceil((Number(skip) || 0) / (Number(take) || 10)) + 1;
-    console.log(currentPage)
     // Retornar a resposta com informações de paginação
     return {
       currentPage,

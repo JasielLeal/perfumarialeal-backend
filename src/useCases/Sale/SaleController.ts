@@ -49,8 +49,6 @@ export class SaleController {
       const { month } = request.params;
       const { take, skip, search } = request.query;
 
-      console.log(take)
-
       const prismaSaleRepository = new PrismaSaleRepository();
       const monthlyExtractUseCase = new MonthlyExtractUseCase(
         prismaSaleRepository
